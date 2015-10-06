@@ -10,15 +10,22 @@ questions to show your team's understanding of the basics of the problem.
 
 ## What is the problem?
 
+> What errors are there with the data acquisition process?
 
-## Why is the problem importnat?
+## Why is the problem important?
 
+> We need to verify the data integrity.
 
 ## What dataset has been made available?
 
+| Date | System Serial | Controller | Obs. Time | Base Time | Delta | Release | FW | SW |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
 
 ## What specific questions are being raised?
 
+1. > Are things getting better over time?
+2. > What percent of data is "good"?
+3. > Is the "good" data random?
 
 # Q/A session
 
@@ -28,17 +35,24 @@ Each team gets to ask one question each time. Write down the questions your team
 wanted to ask and the answers you received. If another team happens to ask the
 same question, simply write down the answer you heard.
 
-## (My team's question)
+## Is there any more data? (More columns?)
 
-## (My team's question)
+> No, those are the only columns.
 
-## (My team's question)
+This implies that the problem is actually looking at the issues with the data
+collection process, not the write-problem.
+
+## What is the ideal behavior?
+
+> Ideally, there is one entry that spans a day from each system once per day.
 
 
 # Approach
 
 Based on the information you've obtained during the Q/A session, come up with
 plan how your team will tackle this problem.
+
+[Examine the Python Analysis Here](NetAppDataAnalysis.html)
 
 ## How should the dataset be imported into Tableau?
 
