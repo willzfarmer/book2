@@ -51,8 +51,6 @@ collection process, not the write-problem.
 Based on the information you've obtained during the Q/A session, come up with
 plan how your team will tackle this problem.
 
-[Examine the Python Analysis Here](NetAppDataAnalysis.html)
-
 ## How should the dataset be imported into Tableau?
 
 
