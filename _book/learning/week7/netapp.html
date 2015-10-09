@@ -56,7 +56,7 @@
     <body>
         <!-- body:start -->
         
-    <div class="book" data-level="1.1.1" data-basepath="../.." data-revision="Fri Oct 09 2015 12:35:57 GMT-0600 (MDT)">
+    <div class="book" data-level="1.1.1" data-basepath="../.." data-revision="Fri Oct 09 2015 12:47:56 GMT-0600 (MDT)">
     
 
 <div class="book-summary">
@@ -378,35 +378,575 @@
 <p>Brian McKean, a senior engineer at NetApp, gave a talk about his company in class.
 He shared a data problem for our class to help solve.</p>
 <h1 id="tool">Tool</h1>
-<p>Tableau</p>
+<ul>
+<li>Tableau</li>
+<li>Python</li>
+</ul>
 <h1 id="authors">Authors</h1>
 <p>This report is prepared by</p>
 <ul>
-<li><a href="link%20to%20github%20account">Full name</a></li>
-<li><a href="link%20to%20github%20account">Full name</a></li>
-<li><a href="link%20to%20github%20account">Full name</a></li>
-<li><a href="link%20to%20github%20account">Full name</a></li>
-<li><a href="link%20to%20github%20account">Full name</a></li>
+<li><a href="http://github.com/willzfarmer" target="_blank">William Farmer</a></li>
+<li><a href="http://github.com/kevinkgifford" target="_blank">Kevin Gifford</a></li>
+<li><a href="http://github.com/pail4944" target="_blank">Parker Illig</a></li>
+<li><a href="http://github.com/DomoYeti" target="_blank">Robert Kendl</a></li>
+<li><a href="http://github.com/drewdinger" target="_blank">Andrew Krodinger</a></li>
+<li><a href="http://github.com/jraesly" target="_blank">John Raesly</a></li>
 </ul>
-<h1 id="-question">(Question)</h1>
-<p>(answer)</p>
-<h1 id="-question">(Question)</h1>
-<p>(answer)</p>
-<h1 id="-question">(Question)</h1>
-<p>(answer)</p>
-<h1 id="-question">(Question)</h1>
-<p>(answer)</p>
-<h1 id="-question">(Question)</h1>
-<p>(answer)</p>
-<h1 id="further-analysis">Further Analysis</h1>
-<p>Our team determines the following questions are too complex for Tableau and
-require custom scripts to be written.</p>
+<h1 id="-kevin-gifford-http-github-com-kevinkgifford"><a href="http://github.com/kevinkgifford" target="_blank">Kevin Gifford</a>:</h1>
+<h2 id="-q2-1-is-there-any-temporal-relationship-consistency-or-inconsistency-that">(Q2-1) Is there any temporal relationship (consistency or inconsistency) that</h2>
+<p>can be observed in regards to &quot;good&quot; and &quot;bad&quot; data (e.g., are any of the
+issues of bad data related to timing in some fashion)?</p>
+<p>Use Excel to read the &apos;netapp.csv&apos; file so can translate Unix seconds into a
+human readable timestamp:</p>
+<pre><code>Excel: Open: netapp.csv
+</code></pre><p>Add two columns in the Excel file for the &apos;Observation Time Stamp&apos; and the
+&apos;Base Time Stamp&apos; translating Unix seconds to human-readable timestamp via the
+below formula (the +0 is a GMT offset of 0, GMT-0):</p>
+<pre><code>= ( ( ( (UnixSeconds)/86400) + (DATE(1970,1,1) - (DATE(1900,1,1) ) ) ) +0 )
+</code></pre><p>Save the file as &apos;netapp.xlsx&apos; and use Tableau to plot the &apos;Observation Time
+Stamp&apos; and the &apos;Base Time Stamp&apos; to check the timestamps &quot;sensibility&quot;.</p>
+<p>Figure 2-1: Base Time Stamps from &apos;netapp.csv&apos;</p>
+<p><img src="Time-Stamps.png" alt="screenshot"></p>
+<p>Figure 2-1 shows three different views of the &apos;Base Time Stamps&apos; and one view
+of &apos;Observation Time Stamp&apos; in the &apos;netapp.csv&apos; file.  From left-to-right:</p>
 <ul>
-<li>(Question)</li>
-<li>(Question)</li>
-<li>(Question)</li>
-<li>(Question)</li>
+<li>The chart on the left shows the &apos;Base Time Stamps&apos; from the entire file: note
+the &apos;Base Time Stamps&apos; range from 1970 to 2017.</li>
+<li>The chart second from the left shows a zoomed view of the &apos;Base Time Stamps&apos;:
+Note all of the &apos;Base Time Stamps&apos; samples dated 2005, 2009 and 2012.</li>
+<li>The chart second from the right shows a zoomed view of 2014 and 2015 &apos;Base
+Time Stamps&apos;: Note the significant number of samples dated in 2014 and the band
+for samples in October, 2015.</li>
+<li>The chart on the right shows the &apos;Observation Time Stamp&apos; distribution which
+follows a similar general pattern as the &apos;Base Time Stamps&apos; distribution: Note
+the band of &apos;Observation Time Stamp&apos; in 2044.</li>
 </ul>
+<p>Analysis: There are lots of data samples for which the Observation Time Stamp
+doesn&apos;t make sense given that the data file is stated to range from January -
+July 2015.  Note that it was required to translate the Unix seconds to a
+human-readable time format to discern this observation.  Recommendation: </p>
+<ul>
+<li>(1) Throw all of this data out when analyzing Jan-Jul 2015 ASUP data </li>
+<li>(2) Figure out why so many erroneous &apos;Base Time Stamps&apos; and &apos;Observation Time
+Stamp&apos; observations.</li>
+</ul>
+<h2 id="-q2-2-is-there-a-relationship-between-delta-time-and-release">(Q2-2): Is there a relationship between &apos;delta time&apos; and &apos;Release&apos;?</h2>
+<p>To investigate Q2-2, I&apos;d like to get rid of any data samples not timestamped in</p>
+<ol>
+<li>To do so I did the following:</li>
+<li><p>Save the updated Excel file (with the computed &apos;Observation Time Stamp&apos; and
+the &apos;Base Time Stamp&apos;) as a space-delimited msdos &apos;.txt&apos; file:</p>
+<p>  Excel: Save As: MS-DOS Formatted Text (.txt) --&gt; &apos;netapp-msdos.txt&apos;</p>
+</li>
+</ol>
+<p>We now have a text file in MS-DOS format which uses a Carriage-Return (\r)
+instead of a newline (\n) to delimit new lines.  We also need to get rid of any
+samples not in the period of Jan-Jul, 2015.  We&apos;ll use a couple of standard
+Unix/Linux text processing tools to translate the carraige returns to newlines
+and then filter all of the lines which are each a sample row of netapp.csv
+text:</p>
+<pre><code>prompt&gt; cat netapp-msdos.txt | tr &apos;\r&apos; &apos;\n&apos; | grep 2015 | grep -v Oct &gt; netapp-2015
+</code></pre><p>We can then open the space-delimited &apos;netapp-2015&apos; file with Excel and save as
+an Excel file just so we can read into Tableau.</p>
+<p><img src="Release-vs-Deltatime.png" alt="screenshot"></p>
+<p>The problem with the above graph is that the average deltatime is badly skewed
+by exorbitantly large deltatime values.  This is an area where additional
+scripts are required to filter the data in order to give meaningful
+visualizations.  However, at a glance the &apos;Galena&apos; Release seems to have
+significantly more samples with exorbitantly large deltatimes than the
+&apos;Illinois&apos; or the &apos;Kingston&apos; Release.</p>
+<h1 id="-parker-illig-http-github-com-pail4944"><a href="http://github.com/pail4944" target="_blank">Parker Illig</a></h1>
+<p><img src="softwareavgmed.png" alt="screenshot"></p>
+<p>I would explain this as a question Tableau couldn&apos;t, or at least couldn&apos;t
+easily, visualize. The graph shows each group of software versions and gives
+each version two bars, the average delta time in blue and the average median
+time in orange. In order to show the median, which was much smaller than most
+averages, I had to use logarithmic scaling to get any kind of comparison
+between the two values. Most of the bars in the graph show their medians&apos;
+around the 24 hours mark, but averages usually were much greater than the mean
+due to the logarithmic scaling. This shows that most software versions had data
+points that were huge, meaning that each software version had significant
+issues. Due to these consistently bad results, I was unable to show any
+correlation between software version and delta time without using custom
+scripts to do more intensive filtering.</p>
+<h1 id="-robert-kendl-http-github-com-domoyeti"><a href="http://github.com/DomoYeti" target="_blank">Robert Kendl</a></h1>
+<p><img src="robert.png" alt="screenshot"></p>
+<p>Here&apos;s the firmware version graph. I computed the average delta times for each
+firmware version and put it into three colors. The green bars are way too high
+for a delta time of about a day (over 100,000 I believe) and the red bars are
+too low (under 60,000). As you can see, there&apos;s only one bar that is yellow,
+which means it gives pretty reliable delta times of around 84,000.</p>
+<h1 id="-will-farmer-http-github-com-willzfarmer"><a href="http://github.com/willzfarmer" target="_blank">Will Farmer</a></h1>
+<h2 id="set-up-imports">Set Up Imports</h2>
+<pre><code class="lang-python"><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+<span class="hljs-keyword">import</span> pandas <span class="hljs-keyword">as</span> pd
+<span class="hljs-keyword">import</span> bqplot.pyplot <span class="hljs-keyword">as</span> blt
+<span class="hljs-keyword">import</span> matplotlib.pyplot <span class="hljs-keyword">as</span> plt
+
+<span class="hljs-keyword">import</span> time
+<span class="hljs-keyword">import</span> datetime <span class="hljs-keyword">as</span> dt
+
+<span class="hljs-keyword">import</span> pysparkling
+
+conn = pysparkling.Context()
+
+<span class="hljs-keyword">from</span> ipywidgets <span class="hljs-keyword">import</span> interact
+
+%matplotlib inline
+</code></pre>
+<h2 id="load-data">Load Data</h2>
+<p>We&apos;re going to use the <code>pandas</code> module to load the data, as its csv stuff is really nice.</p>
+<pre><code class="lang-python">data = pd.read_csv(<span class="hljs-string">&apos;netapp.csv&apos;</span>, header=<span class="hljs-number">0</span>,
+                   names=[<span class="hljs-string">&apos;date&apos;</span>, <span class="hljs-string">&apos;system&apos;</span>, <span class="hljs-string">&apos;controller&apos;</span>, <span class="hljs-string">&apos;obs_time&apos;</span>,
+                          <span class="hljs-string">&apos;base_time&apos;</span>, <span class="hljs-string">&apos;delta&apos;</span>, <span class="hljs-string">&apos;release&apos;</span>, <span class="hljs-string">&apos;fw&apos;</span>, <span class="hljs-string">&apos;sw&apos;</span>],
+                   dtype={<span class="hljs-string">&apos;system&apos;</span>: object})
+</code></pre>
+<p>Now we want to look at the what the rows look like.</p>
+<pre><code class="lang-python">data.head()
+</code></pre>
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>date</th>
+      <th>system</th>
+      <th>controller</th>
+      <th>obs_time</th>
+      <th>base_time</th>
+      <th>delta</th>
+      <th>release</th>
+      <th>fw</th>
+      <th>sw</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>01/01/2015</td>
+      <td>1016FG000254</td>
+      <td>A</td>
+      <td>1420149619</td>
+      <td>1420063224</td>
+      <td>86395</td>
+      <td>Galena</td>
+      <td>07.86.34.00</td>
+      <td>10.86.0G00.0028</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>01/01/2015</td>
+      <td>1016FG000432</td>
+      <td>A</td>
+      <td>1420125162</td>
+      <td>1420091715</td>
+      <td>33447</td>
+      <td>Galena</td>
+      <td>07.86.36.30</td>
+      <td>10.86.0G00.0048</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>01/01/2015</td>
+      <td>1017FG000057</td>
+      <td>A</td>
+      <td>1420102145</td>
+      <td>1420015747</td>
+      <td>86398</td>
+      <td>Galena</td>
+      <td>07.86.29.00</td>
+      <td>10.86.0G08.0017</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>01/01/2015</td>
+      <td>1030FG000606</td>
+      <td>A</td>
+      <td>1420111809</td>
+      <td>1420044906</td>
+      <td>66903</td>
+      <td>Galena</td>
+      <td>07.86.45.30</td>
+      <td>10.86.0G00.0048</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>01/01/2015</td>
+      <td>1030FG000619</td>
+      <td>A</td>
+      <td>1420112025</td>
+      <td>1420111359</td>
+      <td>666</td>
+      <td>Galena</td>
+      <td>07.86.45.30</td>
+      <td>10.86.0G00.0048</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+<h2 id="analyze-data">Analyze Data</h2>
+<p>We will first examine the integrity of the overall dataset.</p>
+<h3 id="delta-time-distribution">Delta Time Distribution</h3>
+<p>This first plot looks at the time distribution of the deltas. Ideally we would see a flat line at approx. 86,000. We don&apos;t see that.</p>
+<pre><code class="lang-python">plt.figure(figsize=(<span class="hljs-number">16</span>, <span class="hljs-number">8</span>))
+plt.scatter(data[<span class="hljs-string">&apos;obs_time&apos;</span>], data[<span class="hljs-string">&apos;delta&apos;</span>], s=<span class="hljs-number">1</span>)
+plt.xlabel(<span class="hljs-string">&apos;Linux Epoch Time&apos;</span>)
+plt.ylabel(<span class="hljs-string">&apos;Deltas&apos;</span>)
+plt.show()
+</code></pre>
+<p><img src="NetAppDataAnalysis_files/NetAppDataAnalysis_7_0.png" alt="png"></p>
+<h3 id="mean-and-standard-deviation">Mean and Standard Deviation</h3>
+<p>We now examine the mean and standard deviation of the deltas for each system. First we generate our data. We will be setting a standard deviation threshold of one hour. Any system data that falls in the deviation we will call &quot;good&quot;.</p>
+<pre><code class="lang-python">thresh = <span class="hljs-number">3600</span>
+grouping = data.groupby(<span class="hljs-string">&apos;system&apos;</span>)
+size = len(grouping)
+stat_data = np.zeros((size, <span class="hljs-number">4</span>))
+i = <span class="hljs-number">0</span>
+<span class="hljs-keyword">for</span> key, group <span class="hljs-keyword">in</span> grouping:
+    deltas = group[<span class="hljs-string">&apos;delta&apos;</span>]
+    stat_data[i][<span class="hljs-number">0</span>] = deltas.mean()
+    stat_data[i][<span class="hljs-number">1</span>] = deltas.std()
+    stat_data[i][<span class="hljs-number">2</span>] = len(deltas)
+    stat_data[i][<span class="hljs-number">3</span>] = (<span class="hljs-number">255</span> <span class="hljs-keyword">if</span> deltas.std() &lt;= thresh <span class="hljs-keyword">else</span> <span class="hljs-number">0</span>)
+    i += <span class="hljs-number">1</span>
+</code></pre>
+<p>We can plot these results.</p>
+<pre><code class="lang-python">fig, axarr = plt.subplots(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, figsize=(<span class="hljs-number">16</span>, <span class="hljs-number">8</span>))
+axarr[<span class="hljs-number">0</span>].scatter(stat_data[:, <span class="hljs-number">0</span>], stat_data[:, <span class="hljs-number">1</span>],
+                 c=stat_data[:, <span class="hljs-number">3</span>], cmap=plt.cm.coolwarm,
+                 alpha=<span class="hljs-number">0.2</span>)
+axarr[<span class="hljs-number">1</span>].scatter(stat_data[:, <span class="hljs-number">0</span>], stat_data[:, <span class="hljs-number">1</span>],
+                 c=stat_data[:, <span class="hljs-number">3</span>], cmap=plt.cm.coolwarm,
+                 alpha=<span class="hljs-number">0.2</span>)
+domain = np.arange(-<span class="hljs-number">1e7</span>, <span class="hljs-number">7e7</span>)
+axarr[<span class="hljs-number">0</span>].plot(domain, thresh * np.ones(len(domain)), <span class="hljs-string">&apos;k--&apos;</span>)
+axarr[<span class="hljs-number">1</span>].plot(domain, thresh * np.ones(len(domain)), <span class="hljs-string">&apos;k--&apos;</span>)
+axarr[<span class="hljs-number">0</span>].set_xlabel(<span class="hljs-string">&apos;Mean Delta Time&apos;</span>)
+axarr[<span class="hljs-number">0</span>].set_ylabel(<span class="hljs-string">&apos;Standard Deviation&apos;</span>)
+axarr[<span class="hljs-number">1</span>].set_xlabel(<span class="hljs-string">&apos;Mean Delta Time&apos;</span>)
+axarr[<span class="hljs-number">1</span>].set_ylabel(<span class="hljs-string">&apos;Standard Deviation&apos;</span>)
+axarr[<span class="hljs-number">1</span>].set_ylim(<span class="hljs-number">0</span>, thresh * <span class="hljs-number">2</span>)
+plt.show()
+</code></pre>
+<p><img src="NetAppDataAnalysis_files/NetAppDataAnalysis_11_0.png" alt="png"></p>
+<p>From this we can interpret several things.</p>
+<ol>
+<li>The standard deviation of each system is terrible. Only a very small set of systems have consistently &quot;good&quot; data. This means that most systems have bad data.</li>
+<li>On the other hand, most systems are clustered at the (relative) origin. This is helpful, but many systems are still bad.</li>
+</ol>
+<p>Now that we know many systems result in poor data consistency, we can branch out and examine just the rows that we consider &quot;valid&quot;, i.e., those rows in which the <code>delta</code> field is approximately 86,000 (the length of a day in seconds).</p>
+<h2 id="good-row-analysis">Good Row Analysis</h2>
+<p>We start by pulling out only the valid rows. (We also get the &quot;bad&quot; rows, but we&apos;ll use those later.)</p>
+<pre><code class="lang-python">clean_raw_data = data.values[np.where(np.abs(data.values[:, <span class="hljs-number">5</span>] - <span class="hljs-number">86400</span>) &lt;= <span class="hljs-number">3600</span>)[<span class="hljs-number">0</span>]]
+dirty_raw_data = data.values[np.where(np.abs(data.values[:, <span class="hljs-number">5</span>] - <span class="hljs-number">86400</span>) &gt; <span class="hljs-number">3600</span>)[<span class="hljs-number">0</span>]]
+</code></pre>
+<pre><code class="lang-python">clean_data = pd.DataFrame(clean_raw_data,
+                        columns=[<span class="hljs-string">&apos;date&apos;</span>, <span class="hljs-string">&apos;system&apos;</span>, <span class="hljs-string">&apos;controller&apos;</span>, <span class="hljs-string">&apos;obs_time&apos;</span>,
+                                 <span class="hljs-string">&apos;base_time&apos;</span>, <span class="hljs-string">&apos;delta&apos;</span>, <span class="hljs-string">&apos;release&apos;</span>, <span class="hljs-string">&apos;fw&apos;</span>, <span class="hljs-string">&apos;sw&apos;</span>])
+print(len(clean_data))
+clean_data.head()
+</code></pre>
+<pre><code>533203
+</code></pre><div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>date</th>
+      <th>system</th>
+      <th>controller</th>
+      <th>obs_time</th>
+      <th>base_time</th>
+      <th>delta</th>
+      <th>release</th>
+      <th>fw</th>
+      <th>sw</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>01/01/2015</td>
+      <td>1016FG000254</td>
+      <td>A</td>
+      <td>1.42015e+09</td>
+      <td>1.420063e+09</td>
+      <td>86395</td>
+      <td>Galena</td>
+      <td>07.86.34.00</td>
+      <td>10.86.0G00.0028</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>01/01/2015</td>
+      <td>1017FG000057</td>
+      <td>A</td>
+      <td>1.420102e+09</td>
+      <td>1.420016e+09</td>
+      <td>86398</td>
+      <td>Galena</td>
+      <td>07.86.29.00</td>
+      <td>10.86.0G08.0017</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>01/01/2015</td>
+      <td>1032FG000284</td>
+      <td>A</td>
+      <td>1.420105e+09</td>
+      <td>1.420018e+09</td>
+      <td>86395</td>
+      <td>Galena</td>
+      <td>07.86.32.00</td>
+      <td>10.86.0G00.0024</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>01/01/2015</td>
+      <td>1032FG000288</td>
+      <td>B</td>
+      <td>1.420074e+09</td>
+      <td>1.419988e+09</td>
+      <td>86396</td>
+      <td>Galena</td>
+      <td>07.86.34.00</td>
+      <td>10.86.0G00.0013</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>01/01/2015</td>
+      <td>1032FG000308</td>
+      <td>A</td>
+      <td>1.420151e+09</td>
+      <td>1.420065e+09</td>
+      <td>86396</td>
+      <td>Galena</td>
+      <td>07.86.32.00</td>
+      <td>10.86.0G00.0024</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+<p>We see that we&apos;ve immediately removed half of the rows. This is arguably good. Notice the term &quot;arguably&quot;...</p>
+<h3 id="reduction-comparison">Reduction Comparison</h3>
+<p>We&apos;ll start by looking at which systems &quot;lost&quot; the most data. We will do this by comparing the system groupings.</p>
+<pre><code class="lang-python">original_grouping = data.groupby(<span class="hljs-string">&apos;system&apos;</span>)
+clean_grouping = clean_data.groupby(<span class="hljs-string">&apos;system&apos;</span>)
+keys = data[<span class="hljs-string">&apos;system&apos;</span>].unique()
+</code></pre>
+<p>We will now extract the difference from this array.</p>
+<pre><code class="lang-python">key_groups = np.zeros((len(keys), <span class="hljs-number">2</span>))
+i = <span class="hljs-number">0</span>
+<span class="hljs-keyword">for</span> k <span class="hljs-keyword">in</span> keys:
+    key_groups[i][<span class="hljs-number">0</span>] = len(original_grouping.get_group(k))
+    <span class="hljs-keyword">try</span>:
+        key_groups[i][<span class="hljs-number">1</span>] = len(clean_grouping.get_group(k))
+    <span class="hljs-keyword">except</span> KeyError:
+        <span class="hljs-keyword">pass</span>
+    i += <span class="hljs-number">1</span>
+</code></pre>
+<pre><code class="lang-python">key_groups_difference = key_groups[:, <span class="hljs-number">0</span>] - key_groups[:, <span class="hljs-number">1</span>]
+</code></pre>
+<p>And now we can plot this.</p>
+<pre><code class="lang-python">plt.figure(figsize=(<span class="hljs-number">16</span>, <span class="hljs-number">8</span>))
+plt.scatter(np.arange(len(key_groups_difference)), key_groups_difference, s=<span class="hljs-number">1</span>)
+plt.show()
+</code></pre>
+<p><img src="NetAppDataAnalysis_files/NetAppDataAnalysis_22_0.png" alt="png"></p>
+<p>We will also do a histogram.</p>
+<pre><code class="lang-python">hist, bins = np.histogram(key_groups_difference, bins=<span class="hljs-number">200</span>)
+center = (bins[:-<span class="hljs-number">1</span>] + bins[<span class="hljs-number">1</span>:]) / <span class="hljs-number">2</span>
+plt.figure(figsize=(<span class="hljs-number">16</span>, <span class="hljs-number">8</span>))
+plt.bar(center, hist, align=<span class="hljs-string">&apos;center&apos;</span>)
+plt.show()
+</code></pre>
+<p><img src="NetAppDataAnalysis_files/NetAppDataAnalysis_24_0.png" alt="png"></p>
+<p>From this we can interpret that <em>many</em> systems have no change, while many lose their data.</p>
+<h2 id="release-analysis">Release Analysis</h2>
+<p>Now let&apos;s look at the dirty data. We will see if the software and firmware versions affect the number of bad rows.</p>
+<pre><code class="lang-python">dirty_data = pd.DataFrame(dirty_raw_data,
+                        columns=[<span class="hljs-string">&apos;date&apos;</span>, <span class="hljs-string">&apos;system&apos;</span>, <span class="hljs-string">&apos;controller&apos;</span>, <span class="hljs-string">&apos;obs_time&apos;</span>,
+                                 <span class="hljs-string">&apos;base_time&apos;</span>, <span class="hljs-string">&apos;delta&apos;</span>, <span class="hljs-string">&apos;release&apos;</span>, <span class="hljs-string">&apos;fw&apos;</span>, <span class="hljs-string">&apos;sw&apos;</span>])
+print(len(dirty_data))
+dirty_data.head()
+</code></pre>
+<pre><code>536778
+</code></pre><div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>date</th>
+      <th>system</th>
+      <th>controller</th>
+      <th>obs_time</th>
+      <th>base_time</th>
+      <th>delta</th>
+      <th>release</th>
+      <th>fw</th>
+      <th>sw</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>01/01/2015</td>
+      <td>1016FG000432</td>
+      <td>A</td>
+      <td>1.420125e+09</td>
+      <td>1.420092e+09</td>
+      <td>33447</td>
+      <td>Galena</td>
+      <td>07.86.36.30</td>
+      <td>10.86.0G00.0048</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>01/01/2015</td>
+      <td>1030FG000606</td>
+      <td>A</td>
+      <td>1.420112e+09</td>
+      <td>1.420045e+09</td>
+      <td>66903</td>
+      <td>Galena</td>
+      <td>07.86.45.30</td>
+      <td>10.86.0G00.0048</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>01/01/2015</td>
+      <td>1030FG000619</td>
+      <td>A</td>
+      <td>1.420112e+09</td>
+      <td>1.420111e+09</td>
+      <td>666</td>
+      <td>Galena</td>
+      <td>07.86.45.30</td>
+      <td>10.86.0G00.0048</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>01/01/2015</td>
+      <td>1030FG000621</td>
+      <td>A</td>
+      <td>1.420112e+09</td>
+      <td>1.420111e+09</td>
+      <td>1205</td>
+      <td>Galena</td>
+      <td>07.86.45.30</td>
+      <td>10.86.0G00.0048</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>01/01/2015</td>
+      <td>1030FG000630</td>
+      <td>A</td>
+      <td>1.420112e+09</td>
+      <td>1.420076e+09</td>
+      <td>36243</td>
+      <td>Galena</td>
+      <td>07.86.45.30</td>
+      <td>10.86.0G00.0048</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+<p>Now we group by software version. We also convert this to an array, as we&apos;re interested in the number of bad values per software version. (Note, we make some assumptions about these software versions. This sorting <em>may</em> be incorrect.)</p>
+<pre><code class="lang-python">sw_groups = dirty_data.groupby(<span class="hljs-string">&apos;sw&apos;</span>)
+sw_data = np.array(sorted([(int(<span class="hljs-string">&apos;&apos;</span>.join(t[<span class="hljs-number">0</span>].split(<span class="hljs-string">&apos;.&apos;</span>)[:<span class="hljs-number">2</span>]) + t[<span class="hljs-number">0</span>].split(<span class="hljs-string">&apos;.&apos;</span>)[-<span class="hljs-number">1</span>]),
+                           t[<span class="hljs-number">0</span>], len(t[<span class="hljs-number">1</span>]))
+                          <span class="hljs-keyword">for</span> t <span class="hljs-keyword">in</span> list(sw_groups)],
+                    key=<span class="hljs-keyword">lambda</span> t: t[<span class="hljs-number">0</span>]))
+numeric_sw_data = np.array(sw_data[:, <span class="hljs-number">2</span>], dtype=int)
+</code></pre>
+<pre><code class="lang-python">fw_groups = dirty_data.groupby(<span class="hljs-string">&apos;fw&apos;</span>)
+fw_data = np.array([(t[<span class="hljs-number">0</span>], len(t[<span class="hljs-number">1</span>]))
+                    <span class="hljs-keyword">for</span> t <span class="hljs-keyword">in</span> list(fw_groups)
+                    <span class="hljs-keyword">if</span> t[<span class="hljs-number">0</span>] != <span class="hljs-string">&apos;no storage_array_profile.txt&apos;</span>])
+numeric_fw_data = np.array(fw_data[:, <span class="hljs-number">1</span>], dtype=int)
+</code></pre>
+<pre><code class="lang-python">plt.figure(figsize=(<span class="hljs-number">16</span>, <span class="hljs-number">8</span>))
+plt.plot(np.arange(len(numeric_sw_data)), numeric_sw_data,
+            label=<span class="hljs-string">&apos;Software Versions&apos;</span>)
+plt.plot(np.arange(len(numeric_fw_data)), numeric_fw_data,
+            label=<span class="hljs-string">&apos;Firmware Versions&apos;</span>)
+plt.legend()
+plt.show()
+</code></pre>
+<p><img src="NetAppDataAnalysis_files/NetAppDataAnalysis_31_0.png" alt="png"></p>
+<p>Hey! That&apos;s perfect! That shows that the number of <em>bad</em> rows was really really high for specific versions, but have since been reduced to a lower amount. That&apos;s exactly what we wanted to see. As per request, now let&apos;s normalize this. In other words, let&apos;s examine the percent of bad rows for each release.</p>
+<h2 id="normalized-releases">Normalized Releases</h2>
+<p>First we&apos;ll get the software groups.</p>
+<pre><code class="lang-python"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">sw_to_key</span><span class="hljs-params">(s)</span>:</span>
+    arr = s.split(<span class="hljs-string">&apos;.&apos;</span>)
+    <span class="hljs-keyword">return</span> int(<span class="hljs-string">&apos;&apos;</span>.join(arr[:<span class="hljs-number">2</span>]) + arr[-<span class="hljs-number">1</span>])
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">fw_to_key</span><span class="hljs-params">(s)</span>:</span>
+    <span class="hljs-keyword">return</span> int(<span class="hljs-string">&apos;&apos;</span>.join(s.split(<span class="hljs-string">&apos;.&apos;</span>)))
+</code></pre>
+<pre><code class="lang-python">dirty_sw = dirty_data.groupby(<span class="hljs-string">&apos;sw&apos;</span>)
+total_sw = data.groupby(<span class="hljs-string">&apos;sw&apos;</span>)
+sw_versions = sorted([(t[<span class="hljs-number">0</span>], sw_to_key(t[<span class="hljs-number">0</span>])) <span class="hljs-keyword">for</span> t <span class="hljs-keyword">in</span> total_sw], key=<span class="hljs-keyword">lambda</span> t: t[<span class="hljs-number">1</span>])
+normal_sw = np.zeros((len(sw_versions), <span class="hljs-number">3</span>), dtype=np.float128)
+<span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(len(sw_versions)):
+    key = sw_versions[i][<span class="hljs-number">0</span>]
+    normal_sw[i][<span class="hljs-number">0</span>] = sw_to_key(key)
+    total_group = total_sw.get_group(key)
+    normal_sw[i][<span class="hljs-number">2</span>] = len(total_group)
+    <span class="hljs-keyword">try</span>:
+        dirty_group = dirty_sw.get_group(key)
+    <span class="hljs-keyword">except</span> KeyError:
+        normal_sw[i][<span class="hljs-number">1</span>] = <span class="hljs-number">0</span>
+    <span class="hljs-keyword">else</span>:
+        normal_sw[i][<span class="hljs-number">1</span>] = (len(dirty_group) / len(total_group))
+</code></pre>
+<p>Now we can get the firmware groups.</p>
+<pre><code class="lang-python">dirty_fw = dirty_data.groupby(<span class="hljs-string">&apos;fw&apos;</span>)
+total_fw = data.groupby(<span class="hljs-string">&apos;fw&apos;</span>)
+fw_versions = sorted([(t[<span class="hljs-number">0</span>], fw_to_key(t[<span class="hljs-number">0</span>]))
+                       <span class="hljs-keyword">for</span> t <span class="hljs-keyword">in</span> total_fw
+                       <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> t[<span class="hljs-number">0</span>].startswith(<span class="hljs-string">&apos;no storage&apos;</span>)],
+                     key=<span class="hljs-keyword">lambda</span> t: t[<span class="hljs-number">1</span>])
+normal_fw = np.zeros((len(fw_versions), <span class="hljs-number">3</span>), dtype=np.float128)
+<span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> range(len(fw_versions)):
+    key = fw_versions[i][<span class="hljs-number">0</span>]
+    normal_fw[i][<span class="hljs-number">0</span>] = fw_to_key(key)
+    total_group = total_fw.get_group(key)
+    normal_fw[i][<span class="hljs-number">1</span>] = len(total_group)
+    <span class="hljs-keyword">try</span>:
+        dirty_group = dirty_fw.get_group(key)
+    <span class="hljs-keyword">except</span> KeyError:
+        normal_fw[i][<span class="hljs-number">1</span>] = <span class="hljs-number">0</span>
+    <span class="hljs-keyword">else</span>:
+        normal_fw[i][<span class="hljs-number">1</span>] = (len(dirty_group) / len(total_group))
+</code></pre>
+<p>And now we can plot.</p>
+<pre><code class="lang-python">fig, axarr = plt.subplots(<span class="hljs-number">2</span>, <span class="hljs-number">1</span>, figsize=(<span class="hljs-number">16</span>, <span class="hljs-number">8</span>))
+axarr[<span class="hljs-number">0</span>].plot(np.arange(len(normal_sw)), normal_sw[:, <span class="hljs-number">1</span>], <span class="hljs-string">&apos;b-&apos;</span>)
+axarr[<span class="hljs-number">0</span>].scatter(np.arange(len(normal_sw)), normal_sw[:, <span class="hljs-number">1</span>], s=<span class="hljs-number">100</span>,
+                 c=normal_sw[:, <span class="hljs-number">2</span>], cmap=plt.get_cmap(<span class="hljs-string">&apos;Blues&apos;</span>))
+axarr[<span class="hljs-number">0</span>].set_xlim(-<span class="hljs-number">1</span>, <span class="hljs-number">90</span>)
+axarr[<span class="hljs-number">0</span>].set_title(<span class="hljs-string">&apos;Normalized Software Versions&apos;</span>)
+axarr[<span class="hljs-number">1</span>].plot(np.arange(len(normal_fw)), normal_fw[:, <span class="hljs-number">1</span>], <span class="hljs-string">&apos;g-&apos;</span>)
+axarr[<span class="hljs-number">1</span>].scatter(np.arange(len(normal_fw)), normal_fw[:, <span class="hljs-number">1</span>], s=<span class="hljs-number">100</span>,
+                 c=normal_fw[:, <span class="hljs-number">2</span>], cmap=plt.get_cmap(<span class="hljs-string">&apos;Greens&apos;</span>))
+axarr[<span class="hljs-number">1</span>].set_title(<span class="hljs-string">&apos;Normalized Firmware Versions&apos;</span>)
+plt.show()
+</code></pre>
+<p><img src="NetAppDataAnalysis_files/NetAppDataAnalysis_38_0.png" alt="png"></p>
+<p>These plots can be interpreted by looking at the $y$ axis. In each graph, the $y$ axis corresponds to the percentage of <em>bad</em> rows for the specific software or firmware version. We can see that there appears to be no strong correlation between versions and the number of bad rows.</p>
+<p>Each point is also shaded, where the darker the node is the more data exists for that version.</p>
+<pre><code class="lang-python">
+
+</code></pre>
 
                     
                     </section>
