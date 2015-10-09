@@ -56,7 +56,7 @@
     <body>
         <!-- body:start -->
         
-    <div class="book" data-level="1.1.2" data-basepath="../.." data-revision="Fri Oct 09 2015 12:47:56 GMT-0600 (MDT)">
+    <div class="book" data-level="1.1.2" data-basepath="../.." data-revision="Fri Oct 09 2015 13:43:07 GMT-0600 (MDT)">
     
 
 <div class="book-summary">
@@ -415,11 +415,17 @@ $(&apos;button#shorter&apos;).click(function(){
     $(&apos;.myviz&apos;).height(100)
 })
 
-// TODO: add an event handler for the &quot;Red&quot; button to set the background color
-// of the viz block to red
+$(&apos;button#red&apos;).click(function(){
+    console.log(&apos;red button&apos;);
+    $(&apos;.myviz&apos;).css(&apos;background-color&apos;, &apos;&apos;)
+                .css(&apos;background-color&apos;, &apos;red&apos;);
+})
 
-// TODO: add an event handler for the &quot;Green&quot; button to set the background color
-// of the viz block to green
+$(&apos;button#green&apos;).click(function(){
+    console.log(&apos;green button&apos;);
+    $(&apos;.myviz&apos;).css(&apos;background-color&apos;, &apos;&apos;)
+                .css(&apos;background-color&apos;, &apos;green&apos;);
+})
 
 $(&apos;button#onebar&apos;).click(function(){
     var svg = &quot;&lt;svg&gt;&lt;rect height=&apos;50&apos; width=&apos;10&apos;&gt;&lt;/rect&gt;&lt;/svg&gt;&quot;
@@ -431,9 +437,23 @@ $(&apos;button#twobars&apos;).click(function(){
     $(&apos;.myviz&apos;).html(svg)
 })
 
-// TODO: add an event handler for the &quot;Five Bars&quot; button to display five bars
+$(&apos;button#fivebars&apos;).click(function(){
+    var svg = &quot;&lt;svg&gt;&quot;
+    for (i=0; i &lt; 5; i++) {
+        svg += &quot;&lt;rect height=&apos;50&apos; width=&apos;10&apos; x=&apos;&quot; + i * 20 + &quot;&apos;/&gt;&quot;
+    }
+    svg += &quot;&lt;/svg&gt;&quot;
+    $(&apos;.myviz&apos;).html(svg)
+})
 
-// TODO: add an event handler for the &quot;Five Green Bars&quot; button to display five green bars</code></pre><script>var code ="console.log('adding click event handlers')\n\n$('button#hello').click(function(){\n    console.log('hello button is clicked')\n    $('.myviz').html(\"hello\")\n})\n\n$('button#hi').click(function(){\n    console.log('hello button is clicked')\n    $('.myviz').html(\"hi\")\n})\n\n$('button#taller').click(function(){\n    console.log('taller button is clicked')\n    $('.myviz').height(500)\n})\n\n$('button#shorter').click(function(){\n    console.log('shorter button is clicked')\n    $('.myviz').height(100)\n})\n\n// TODO: add an event handler for the \"Red\" button to set the background color\n// of the viz block to red\n\n// TODO: add an event handler for the \"Green\" button to set the background color\n// of the viz block to green\n\n$('button#onebar').click(function(){\n    var svg = \"<svg><rect height='50' width='10'></rect></svg>\"\n    $('.myviz').html(svg)\n})\n\n$('button#twobars').click(function(){\n    var svg = \"<svg><rect height='50' width='10'/><rect height='50' width='10' x='20'/></svg>\"\n    $('.myviz').html(svg)\n})\n\n// TODO: add an event handler for the \"Five Bars\" button to display five bars\n\n// TODO: add an event handler for the \"Five Green Bars\" button to display five green bars"</script></p>
+$(&apos;button#fivegreenbars&apos;).click(function(){
+    var svg = &quot;&lt;svg&gt;&quot;
+    for (i=0; i &lt; 5; i++) {
+        svg += &quot;&lt;rect height=&apos;50&apos; width=&apos;10&apos; x=&apos;&quot; + i * 20 + &quot;&apos; style=&apos;fill:rgb(0, 255, 0);&apos;/&gt;&quot;
+    }
+    svg += &quot;&lt;/svg&gt;&quot;
+    $(&apos;.myviz&apos;).html(svg)
+})</code></pre><script>var code ="console.log('adding click event handlers')\n\n$('button#hello').click(function(){\n    console.log('hello button is clicked')\n    $('.myviz').html(\"hello\")\n})\n\n$('button#hi').click(function(){\n    console.log('hello button is clicked')\n    $('.myviz').html(\"hi\")\n})\n\n$('button#taller').click(function(){\n    console.log('taller button is clicked')\n    $('.myviz').height(500)\n})\n\n$('button#shorter').click(function(){\n    console.log('shorter button is clicked')\n    $('.myviz').height(100)\n})\n\n$('button#red').click(function(){\n    console.log('red button');\n    $('.myviz').css('background-color', '')\n                .css('background-color', 'red');\n})\n\n$('button#green').click(function(){\n    console.log('green button');\n    $('.myviz').css('background-color', '')\n                .css('background-color', 'green');\n})\n\n$('button#onebar').click(function(){\n    var svg = \"<svg><rect height='50' width='10'></rect></svg>\"\n    $('.myviz').html(svg)\n})\n\n$('button#twobars').click(function(){\n    var svg = \"<svg><rect height='50' width='10'/><rect height='50' width='10' x='20'/></svg>\"\n    $('.myviz').html(svg)\n})\n\n$('button#fivebars').click(function(){\n    var svg = \"<svg>\"\n    for (i=0; i < 5; i++) {\n        svg += \"<rect height='50' width='10' x='\" + i * 20 + \"'/>\"\n    }\n    svg += \"</svg>\"\n    $('.myviz').html(svg)\n})\n\n$('button#fivegreenbars').click(function(){\n    var svg = \"<svg>\"\n    for (i=0; i < 5; i++) {\n        svg += \"<rect height='50' width='10' x='\" + i * 20 + \"' style='fill:rgb(0, 255, 0);'/>\"\n    }\n    svg += \"</svg>\"\n    $('.myviz').html(svg)\n})"</script></p>
 
                     
                     </section>

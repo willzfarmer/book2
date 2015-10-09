@@ -56,7 +56,7 @@
     <body>
         <!-- body:start -->
         
-    <div class="book" data-level="1.1.4" data-basepath="../.." data-revision="Fri Oct 09 2015 12:47:56 GMT-0600 (MDT)">
+    <div class="book" data-level="1.1.4" data-basepath="../.." data-revision="Fri Oct 09 2015 13:43:07 GMT-0600 (MDT)">
     
 
 <div class="book-summary">
@@ -392,7 +392,14 @@
 
 // TODO: add an event handler for the &quot;Load FCQ&quot; button to load the FCQ dataset
 // into the memory, and display a message in the Viz box to indicate how many records
-// are loaded. The data is located in &apos;/data/fcq.clean.json&apos;</code></pre><script>var code ="$('button#load-pokemon').click(function(){    \n\n    $.get('/data/pokemon-small.json')\n     .success(function(data){\n         $('.myviz').html('number of records load:' + data.length)\n     })\n})\n\n// TODO: add an event handler for the \"Load FCQ\" button to load the FCQ dataset\n// into the memory, and display a message in the Viz box to indicate how many records\n// are loaded. The data is located in '/data/fcq.clean.json'"</script></p>
+// are loaded. The data is located in &apos;/data/fcq.clean.json&apos;
+$(&apos;button#load-fcq&apos;).click(function(){
+
+    $.get(&apos;/data/fcq.clean.json&apos;)
+     .success(function(data){
+         $(&apos;.myviz&apos;).html(&apos;number of records load:&apos; + data.length)
+     })
+})</code></pre><script>var code ="$('button#load-pokemon').click(function(){    \n\n    $.get('/data/pokemon-small.json')\n     .success(function(data){\n         $('.myviz').html('number of records load:' + data.length)\n     })\n})\n\n// TODO: add an event handler for the \"Load FCQ\" button to load the FCQ dataset\n// into the memory, and display a message in the Viz box to indicate how many records\n// are loaded. The data is located in '/data/fcq.clean.json'\n$('button#load-fcq').click(function(){\n\n    $.get('/data/fcq.clean.json')\n     .success(function(data){\n         $('.myviz').html('number of records load:' + data.length)\n     })\n})"</script></p>
 
                     
                     </section>
