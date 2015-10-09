@@ -3,6 +3,16 @@
 Brian McKean from NetApp presented to the class a data analysis problem he'd
 like to get some help on.
 
+# Authors
+
+This report is prepared by
+* [William Farmer](http://github.com/willzfarmer)
+* [Kevin Gifford](http://github.com/kevinkgifford)
+* [Parker Illig](http://github.com/pail4944)
+* [Robert Kendl](http://github.com/DomoYeti)
+* [Andrew Krodinger](http://github.com/drewdinger)
+* [John Raesly](http://github.com/jraesly)
+
 # Overview
 
 Listen to his presentation carefully. Write down the answers to the following
@@ -46,26 +56,111 @@ collection process, not the write-problem.
 
 > Ideally, there is one entry that spans a day from each system once per day.
 
-# Approach
+# [Kevin Gifford](http://github.com/kevinkgifford):
 
-Based on the information you've obtained during the Q/A session, come up with
-plan how your team will tackle this problem.
+## (Q2-1) Is there any temporal relationship (consistency or inconsistency) that
+can be observed in regards to "good" and "bad" data (e.g., are any of the
+issues of bad data related to timing in some fashion)?
 
-## How should the dataset be imported into Tableau?
+Use Excel to read the 'netapp.csv' file so can translate Unix seconds into a
+human readable timestamp:
 
+    Excel: Open: netapp.csv
 
-## How should the work be distributed among the team members?
+Add two columns in the Excel file for the 'Observation Time Stamp' and the
+'Base Time Stamp' translating Unix seconds to human-readable timestamp via the
+below formula (the +0 is a GMT offset of 0, GMT-0):
 
+    = ( ( ( (UnixSeconds)/86400) + (DATE(1970,1,1) - (DATE(1900,1,1) ) ) ) +0 )
 
-## What types of charts or visualizations to use to support the answer?
+Save the file as 'netapp.xlsx' and use Tableau to plot the 'Observation Time
+Stamp' and the 'Base Time Stamp' to check the timestamps "sensibility".
 
+Figure 2-1: Base Time Stamps from 'netapp.csv'
 
-## What questions may be too complex for Tableau and may require custom scripts to be written?
+![screenshot](Time-Stamps.png)
 
-# Python Approach
+Figure 2-1 shows three different views of the 'Base Time Stamps' and one view
+of 'Observation Time Stamp' in the 'netapp.csv' file.  From left-to-right:
+* The chart on the left shows the 'Base Time Stamps' from the entire file: note
+the 'Base Time Stamps' range from 1970 to 2017.
+* The chart second from the left shows a zoomed view of the 'Base Time Stamps':
+Note all of the 'Base Time Stamps' samples dated 2005, 2009 and 2012.
+* The chart second from the right shows a zoomed view of 2014 and 2015 'Base
+Time Stamps': Note the significant number of samples dated in 2014 and the band
+for samples in October, 2015.
+* The chart on the right shows the 'Observation Time Stamp' distribution which
+follows a similar general pattern as the 'Base Time Stamps' distribution: Note
+the band of 'Observation Time Stamp' in 2044.
+
+Analysis: There are lots of data samples for which the Observation Time Stamp
+doesn't make sense given that the data file is stated to range from January -
+July 2015.  Note that it was required to translate the Unix seconds to a
+human-readable time format to discern this observation.  Recommendation: 
+* (1) Throw all of this data out when analyzing Jan-Jul 2015 ASUP data 
+* (2) Figure out why so many erroneous 'Base Time Stamps' and 'Observation Time
+Stamp' observations.
+
+## (Q2-2): Is there a relationship between 'delta time' and 'Release'?
+
+To investigate Q2-2, I'd like to get rid of any data samples not timestamped in
+2015. To do so I did the following:
+* Save the updated Excel file (with the computed 'Observation Time Stamp' and
+the 'Base Time Stamp') as a space-delimited msdos '.txt' file:
+
+    Excel: Save As: MS-DOS Formatted Text (.txt) --> 'netapp-msdos.txt'
+
+We now have a text file in MS-DOS format which uses a Carriage-Return (\r)
+instead of a newline (\n) to delimit new lines.  We also need to get rid of any
+samples not in the period of Jan-Jul, 2015.  We'll use a couple of standard
+Unix/Linux text processing tools to translate the carraige returns to newlines
+and then filter all of the lines which are each a sample row of netapp.csv
+text:
+
+    prompt> cat netapp-msdos.txt | tr '\r' '\n' | grep 2015 | grep -v Oct > netapp-2015
+
+We can then open the space-delimited 'netapp-2015' file with Excel and save as
+an Excel file just so we can read into Tableau.
+
+![screenshot](Release-vs-Deltatime.png)
+
+The problem with the above graph is that the average deltatime is badly skewed
+by exorbitantly large deltatime values.  This is an area where additional
+scripts are required to filter the data in order to give meaningful
+visualizations.  However, at a glance the 'Galena' Release seems to have
+significantly more samples with exorbitantly large deltatimes than the
+'Illinois' or the 'Kingston' Release.
+
+# [Parker Illig](http://github.com/pail4944)
+
+![screenshot](./softwareavgmed.png)
+
+I would explain this as a question Tableau couldn't, or at least couldn't
+easily, visualize. The graph shows each group of software versions and gives
+each version two bars, the average delta time in blue and the average median
+time in orange. In order to show the median, which was much smaller than most
+averages, I had to use logarithmic scaling to get any kind of comparison
+between the two values. Most of the bars in the graph show their medians'
+around the 24 hours mark, but averages usually were much greater than the mean
+due to the logarithmic scaling. This shows that most software versions had data
+points that were huge, meaning that each software version had significant
+issues. Due to these consistently bad results, I was unable to show any
+correlation between software version and delta time without using custom
+scripts to do more intensive filtering.
+
+# [Robert Kendl](http://github.com/DomoYeti)
+
+![screenshot](./robert.png)
+
+Here's the firmware version graph. I computed the average delta times for each
+firmware version and put it into three colors. The green bars are way too high
+for a delta time of about a day (over 100,000 I believe) and the red bars are
+too low (under 60,000). As you can see, there's only one bar that is yellow,
+which means it gives pretty reliable delta times of around 84,000.
+
+# [Will Farmer](http://github.com/willzfarmer)
 
 ## Set Up Imports
-
 
 ```python
 import numpy as np

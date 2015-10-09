@@ -54,7 +54,7 @@
     <body>
         <!-- body:start -->
         
-    <div class="book" data-level="2.1" data-basepath="../.." data-revision="Wed Oct 07 2015 17:52:07 GMT-0600 (MDT)">
+    <div class="book" data-level="2.1" data-basepath="../.." data-revision="Fri Oct 09 2015 12:35:57 GMT-0600 (MDT)">
     
 
 <div class="book-summary">
@@ -375,6 +375,16 @@
                         <h1 id="netapp">NetApp</h1>
 <p>Brian McKean from NetApp presented to the class a data analysis problem he&apos;d
 like to get some help on.</p>
+<h1 id="authors">Authors</h1>
+<p>This report is prepared by</p>
+<ul>
+<li><a href="http://github.com/willzfarmer" target="_blank">William Farmer</a></li>
+<li><a href="http://github.com/kevinkgifford" target="_blank">Kevin Gifford</a></li>
+<li><a href="http://github.com/pail4944" target="_blank">Parker Illig</a></li>
+<li><a href="http://github.com/DomoYeti" target="_blank">Robert Kendl</a></li>
+<li><a href="http://github.com/drewdinger" target="_blank">Andrew Krodinger</a></li>
+<li><a href="http://github.com/jraesly" target="_blank">John Raesly</a></li>
+</ul>
 <h1 id="overview">Overview</h1>
 <p>Listen to his presentation carefully. Write down the answers to the following
 questions to show your team&apos;s understanding of the basics of the problem.</p>
@@ -438,15 +448,91 @@ collection process, not the write-problem.</p>
 <blockquote>
 <p>Ideally, there is one entry that spans a day from each system once per day.</p>
 </blockquote>
-<h1 id="approach">Approach</h1>
-<p>Based on the information you&apos;ve obtained during the Q/A session, come up with
-plan how your team will tackle this problem.</p>
-<p><a href="NetAppDataAnalysis.html">Examine the Python Analysis Here</a></p>
-<h2 id="how-should-the-dataset-be-imported-into-tableau">How should the dataset be imported into Tableau?</h2>
-<h2 id="how-should-the-work-be-distributed-among-the-team-members">How should the work be distributed among the team members?</h2>
-<h2 id="what-types-of-charts-or-visualizations-to-use-to-support-the-answer">What types of charts or visualizations to use to support the answer?</h2>
-<h2 id="what-questions-may-be-too-complex-for-tableau-and-may-require-custom-scripts-to-be-written">What questions may be too complex for Tableau and may require custom scripts to be written?</h2>
-<h1 id="python-approach">Python Approach</h1>
+<h1 id="-kevin-gifford-http-github-com-kevinkgifford"><a href="http://github.com/kevinkgifford" target="_blank">Kevin Gifford</a>:</h1>
+<h2 id="-q2-1-is-there-any-temporal-relationship-consistency-or-inconsistency-that">(Q2-1) Is there any temporal relationship (consistency or inconsistency) that</h2>
+<p>can be observed in regards to &quot;good&quot; and &quot;bad&quot; data (e.g., are any of the
+issues of bad data related to timing in some fashion)?</p>
+<p>Use Excel to read the &apos;netapp.csv&apos; file so can translate Unix seconds into a
+human readable timestamp:</p>
+<pre><code>Excel: Open: netapp.csv
+</code></pre><p>Add two columns in the Excel file for the &apos;Observation Time Stamp&apos; and the
+&apos;Base Time Stamp&apos; translating Unix seconds to human-readable timestamp via the
+below formula (the +0 is a GMT offset of 0, GMT-0):</p>
+<pre><code>= ( ( ( (UnixSeconds)/86400) + (DATE(1970,1,1) - (DATE(1900,1,1) ) ) ) +0 )
+</code></pre><p>Save the file as &apos;netapp.xlsx&apos; and use Tableau to plot the &apos;Observation Time
+Stamp&apos; and the &apos;Base Time Stamp&apos; to check the timestamps &quot;sensibility&quot;.</p>
+<p>Figure 2-1: Base Time Stamps from &apos;netapp.csv&apos;</p>
+<p><img src="Time-Stamps.png" alt="screenshot"></p>
+<p>Figure 2-1 shows three different views of the &apos;Base Time Stamps&apos; and one view
+of &apos;Observation Time Stamp&apos; in the &apos;netapp.csv&apos; file.  From left-to-right:</p>
+<ul>
+<li>The chart on the left shows the &apos;Base Time Stamps&apos; from the entire file: note
+the &apos;Base Time Stamps&apos; range from 1970 to 2017.</li>
+<li>The chart second from the left shows a zoomed view of the &apos;Base Time Stamps&apos;:
+Note all of the &apos;Base Time Stamps&apos; samples dated 2005, 2009 and 2012.</li>
+<li>The chart second from the right shows a zoomed view of 2014 and 2015 &apos;Base
+Time Stamps&apos;: Note the significant number of samples dated in 2014 and the band
+for samples in October, 2015.</li>
+<li>The chart on the right shows the &apos;Observation Time Stamp&apos; distribution which
+follows a similar general pattern as the &apos;Base Time Stamps&apos; distribution: Note
+the band of &apos;Observation Time Stamp&apos; in 2044.</li>
+</ul>
+<p>Analysis: There are lots of data samples for which the Observation Time Stamp
+doesn&apos;t make sense given that the data file is stated to range from January -
+July 2015.  Note that it was required to translate the Unix seconds to a
+human-readable time format to discern this observation.  Recommendation: </p>
+<ul>
+<li>(1) Throw all of this data out when analyzing Jan-Jul 2015 ASUP data </li>
+<li>(2) Figure out why so many erroneous &apos;Base Time Stamps&apos; and &apos;Observation Time
+Stamp&apos; observations.</li>
+</ul>
+<h2 id="-q2-2-is-there-a-relationship-between-delta-time-and-release">(Q2-2): Is there a relationship between &apos;delta time&apos; and &apos;Release&apos;?</h2>
+<p>To investigate Q2-2, I&apos;d like to get rid of any data samples not timestamped in</p>
+<ol>
+<li>To do so I did the following:</li>
+<li><p>Save the updated Excel file (with the computed &apos;Observation Time Stamp&apos; and
+the &apos;Base Time Stamp&apos;) as a space-delimited msdos &apos;.txt&apos; file:</p>
+<p>  Excel: Save As: MS-DOS Formatted Text (.txt) --&gt; &apos;netapp-msdos.txt&apos;</p>
+</li>
+</ol>
+<p>We now have a text file in MS-DOS format which uses a Carriage-Return (\r)
+instead of a newline (\n) to delimit new lines.  We also need to get rid of any
+samples not in the period of Jan-Jul, 2015.  We&apos;ll use a couple of standard
+Unix/Linux text processing tools to translate the carraige returns to newlines
+and then filter all of the lines which are each a sample row of netapp.csv
+text:</p>
+<pre><code>prompt&gt; cat netapp-msdos.txt | tr &apos;\r&apos; &apos;\n&apos; | grep 2015 | grep -v Oct &gt; netapp-2015
+</code></pre><p>We can then open the space-delimited &apos;netapp-2015&apos; file with Excel and save as
+an Excel file just so we can read into Tableau.</p>
+<p><img src="Release-vs-Deltatime.png" alt="screenshot"></p>
+<p>The problem with the above graph is that the average deltatime is badly skewed
+by exorbitantly large deltatime values.  This is an area where additional
+scripts are required to filter the data in order to give meaningful
+visualizations.  However, at a glance the &apos;Galena&apos; Release seems to have
+significantly more samples with exorbitantly large deltatimes than the
+&apos;Illinois&apos; or the &apos;Kingston&apos; Release.</p>
+<h1 id="-parker-illig-http-github-com-pail4944"><a href="http://github.com/pail4944" target="_blank">Parker Illig</a></h1>
+<p><img src="softwareavgmed.png" alt="screenshot"></p>
+<p>I would explain this as a question Tableau couldn&apos;t, or at least couldn&apos;t
+easily, visualize. The graph shows each group of software versions and gives
+each version two bars, the average delta time in blue and the average median
+time in orange. In order to show the median, which was much smaller than most
+averages, I had to use logarithmic scaling to get any kind of comparison
+between the two values. Most of the bars in the graph show their medians&apos;
+around the 24 hours mark, but averages usually were much greater than the mean
+due to the logarithmic scaling. This shows that most software versions had data
+points that were huge, meaning that each software version had significant
+issues. Due to these consistently bad results, I was unable to show any
+correlation between software version and delta time without using custom
+scripts to do more intensive filtering.</p>
+<h1 id="-robert-kendl-http-github-com-domoyeti"><a href="http://github.com/DomoYeti" target="_blank">Robert Kendl</a></h1>
+<p><img src="robert.png" alt="screenshot"></p>
+<p>Here&apos;s the firmware version graph. I computed the average delta times for each
+firmware version and put it into three colors. The green bars are way too high
+for a delta time of about a day (over 100,000 I believe) and the red bars are
+too low (under 60,000). As you can see, there&apos;s only one bar that is yellow,
+which means it gives pretty reliable delta times of around 84,000.</p>
+<h1 id="-will-farmer-http-github-com-willzfarmer"><a href="http://github.com/willzfarmer" target="_blank">Will Farmer</a></h1>
 <h2 id="set-up-imports">Set Up Imports</h2>
 <pre><code class="lang-python"><span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
 <span class="hljs-keyword">import</span> pandas <span class="hljs-keyword">as</span> pd
