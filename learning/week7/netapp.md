@@ -119,6 +119,16 @@ for a delta time of about a day (over 100,000 I believe) and the red bars are
 too low (under 60,000). As you can see, there's only one bar that is yellow,
 which means it gives pretty reliable delta times of around 84,000.
 
+# [John Raesly](http://github.com/jraesly)
+
+## Is there a correlation between delta time and date?
+
+It does seem that there is a correlation between date and delta time. The delta
+time has decreased over time dramatically. This brings a follow up question of
+why this is happening?
+
+![screenshot](./john.png)
+
 # [Will Farmer](http://github.com/willzfarmer)
 
 ## Set Up Imports
