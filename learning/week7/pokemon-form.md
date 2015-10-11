@@ -51,8 +51,8 @@ pokemonData = 'not loaded yet'
 $.get('/data/pokemon-small.json')
  .success(function(data){
      console.log('data loaded', data)
-     // TODO: show in the myviz that the data is loaded
-     pokemonData = data          
+     pokemonData = data
+     $('.myviz').html('number of records load:' + data.length)
  })
 
 
