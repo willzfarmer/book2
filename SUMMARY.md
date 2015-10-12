@@ -11,3 +11,7 @@
         * [FCQ](/learning/week7/fcq.md)
 * [Hackathons](hackathons/index.md)
     * [NetApp](hackathons/netapp/index.md)
+    * [Yelp](hackathons/yelp/index.md)
+        * [Warmup](hackathons/yelp/warmup.md)
+        * [Questions](hackathons/yelp/questions.md)
+        * [UI](hackathons/yelp/ui.md)
