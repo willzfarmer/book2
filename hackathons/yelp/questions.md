@@ -15,32 +15,34 @@ Three example of specific questions in this class are:
 Come up with five additional question classes. Each must have two or three
 variables.
 
-## (Question template)
-Three example of specific questions in this class are:
-* (specific question)
-* (specific question)
-* (specific question)
+## Kevin Gifford: What businesses have category (W) in city (X) with at least (Y) reviews and at least a rating of (Z)?
 
-## (Question template)
 Three example of specific questions in this class are:
-* (specific question)
-* (specific question)
-* (specific question)
 
-## (Question template)
-Three example of specific questions in this class are:
-* (specific question)
-* (specific question)
-* (specific question)
+* What businesses have category 'Medical' in 'Phoenix' with at least '100' reviews and at least a rating of '3.0'?
+* What businesses have category 'Shopping' in 'Pittsburgh' with at least '50' reviews and at least a rating of '3.5'?
+* What businesses have category 'Sports' in 'Tuscan' with at least '200' reviews and a rating of at least '4.0'?
 
-## (Question template)
-Three example of specific questions in this class are:
-* (specific question)
-* (specific question)
-* (specific question)
+## Will Farmer: What businesses per State (X) have the most stars (Y), and what Longitude (Z) is the best?
 
-## (Question template)
+Three examples are:
+
+* What Longitude in Colorado has the most stars?
+* What Longitude in Wyoming has the most stars?
+* What Longitude in Texas has the most stars?
+
+## Parker Illig: What's the avg rating (X) in city (Y)?
+
 Three example of specific questions in this class are:
-* (specific question)
-* (specific question)
-* (specific question)
+
+* What's the most avg rating in Pittsburgh?
+* What's the most avg rating in Raleigh?
+* What's the most avg rating in Phoenix?
+
+## Robert Kendl: What businesses in city (X) have closing hours (Y) with a rating of (Z)?
+
+Three example of specific questions in this class are:
+
+* What businesses in Denver have closing hours 10:00 with a rating of 4.0?
+* What businesses in New York have closing hours 8:00 with a rating of 3.5?
+* What businesses in Savannah have closing hours 9:00 with a rating of 4.5?

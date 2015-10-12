@@ -5,7 +5,7 @@
         <!-- head:start -->
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>Form | book2</title>
+        <title>Yelp | book2</title>
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
         <meta name="description" content="">
         <meta name="generator" content="GitBook 2.2.0">
@@ -45,10 +45,10 @@
         
     
     
-    <link rel="next" href="../../learning/week7/jquery-load.html" />
+    <link rel="next" href="../../hackathons/yelp/warmup.html" />
     
     
-    <link rel="prev" href="../../learning/week7/jquery-click.html" />
+    <link rel="prev" href="../../hackathons/netapp/index.html" />
     
 
         <!-- head:end -->
@@ -56,7 +56,7 @@
     <body>
         <!-- body:start -->
         
-    <div class="book" data-level="1.1.3" data-basepath="../.." data-revision="Mon Oct 12 2015 17:12:10 GMT-0600 (MDT)">
+    <div class="book" data-level="2.2" data-basepath="../.." data-revision="Mon Oct 12 2015 17:12:10 GMT-0600 (MDT)">
     
 
 <div class="book-summary">
@@ -148,7 +148,7 @@
             
         </li>
     
-        <li class="chapter active" data-level="1.1.3" data-path="learning/week7/jquery-form.html">
+        <li class="chapter " data-level="1.1.3" data-path="learning/week7/jquery-form.html">
             
                 
                     <a href="../../learning/week7/jquery-form.html">
@@ -264,7 +264,7 @@
             
         </li>
     
-        <li class="chapter " data-level="2.2" data-path="hackathons/yelp/index.html">
+        <li class="chapter active" data-level="2.2" data-path="hackathons/yelp/index.html">
             
                 
                     <a href="../../hackathons/yelp/index.html">
@@ -440,80 +440,51 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h1 id="input">Input</h1>
-<p><input id="show" type="text" value="hello"> <button id="show">Show text</button></p>
-<p><input id="setcolor" type="text" value="green"> <button id="setcolor">Set Background Color</button></p>
-<p><input id="setheight" type="text" value="200"> <button id="setheight">Set Height</button></p>
-<h2 id="bars-1">Bars (1)</h2>
-<div style="border:1px grey solid; padding:5px;">
-Number: <input id="bars1-number" type="text" value="5">
-<button id="bars1">Show Bars (1)</button>
-</div>
-
-<h2 id="bars-2">Bars (2)</h2>
-<div style="border:1px grey solid; padding:5px;">
-Number: <input id="bars2-number" type="text" value="5">
-Color:  <input id="bars2-color" type="text" value="red">
-<button id="bars2">Show Bars (2)</button>
-</div>
-
-<h2 id="bars-3">Bars (3)</h2>
-<div style="border:1px grey solid; padding:5px;">
-Number: <input id="bars3-number" type="text" value="5">
-Color:  <input id="bars3-color" type="text" value="red">
-Height:  <input id="bars3-height" type="text" value="50">
-<button id="bars3">Show Bars (3)</button>
-</div>
-
-
-<h2 id="viz">Viz</h2>
-<div class="myviz" style="width:100%; height:100px; border: 1px black solid;">
-</div>
-
-
-<p><pre><code>$(&apos;button#show&apos;).click(function(){    
-    var value = $(&apos;input#show&apos;).val()    
-    console.log(value)
-    $(&apos;.myviz&apos;).html(value)
-})
-
-$(&apos;button#setcolor&apos;).click(function(){
-    $(&apos;.myviz&apos;).css(&apos;background-color&apos;,$(&apos;input#setcolor&apos;).val())
-})
-
-$(&apos;button#setheight&apos;).click(function(){
-    $(&apos;.myviz&apos;).height($(&apos;input#setheight&apos;).val())
-})
-
-
-$(&apos;button#bars1&apos;).click(function(){
-    var svg = &quot;&lt;svg&gt;&quot;
-    for (i=0; i &lt; $(&apos;input#bars1-number&apos;).val(); i++) {
-        svg += &quot;&lt;rect height=&apos;50&apos; width=&apos;10&apos; x=&apos;&quot; + i * 20 + &quot;&apos;/&gt;&quot;
-    }
-    svg += &quot;&lt;/svg&gt;&quot;
-    $(&apos;.myviz&apos;).html(svg)
-})
-
-$(&apos;button#bars2&apos;).click(function(){    
-    var svg = &quot;&lt;svg&gt;&quot;
-    for (i=0; i &lt; $(&apos;input#bars2-number&apos;).val(); i++) {
-        svg += &quot;&lt;rect height=&apos;50&apos; width=&apos;10&apos; x=&apos;&quot; + i * 20 + &quot;&apos; style=&apos;fill:&quot; + $(&apos;input#bars2-color&apos;).val() + &quot;&apos;/&gt;&quot;
-    }
-    svg += &quot;&lt;/svg&gt;&quot;
-    $(&apos;.myviz&apos;).html(svg)
-})
-
-$(&apos;button#bars3&apos;).click(function(){    
-    var svg = &quot;&lt;svg&gt;&quot;
-    for (i=0; i &lt; $(&apos;input#bars3-number&apos;).val(); i++) {
-        svg += &quot;&lt;rect height=&apos;&quot; + $(&apos;input#bars3-height&apos;).val()
-        svg += &quot;&apos; width=&apos;10&apos; x=&apos;&quot; + i * 20
-        svg += &quot;&apos; style=&apos;fill:&quot; + $(&apos;input#bars3-color&apos;).val() + &quot;&apos;/&gt;&quot;
-    }
-    svg += &quot;&lt;/svg&gt;&quot;
-    $(&apos;.myviz&apos;).html(svg)
-})</code></pre><script>var code ="$('button#show').click(function(){    \n    var value = $('input#show').val()    \n    console.log(value)\n    $('.myviz').html(value)\n})\n\n$('button#setcolor').click(function(){\n    $('.myviz').css('background-color',$('input#setcolor').val())\n})\n\n$('button#setheight').click(function(){\n    $('.myviz').height($('input#setheight').val())\n})\n\n\n$('button#bars1').click(function(){\n    var svg = \"<svg>\"\n    for (i=0; i < $('input#bars1-number').val(); i++) {\n        svg += \"<rect height='50' width='10' x='\" + i * 20 + \"'/>\"\n    }\n    svg += \"</svg>\"\n    $('.myviz').html(svg)\n})\n\n$('button#bars2').click(function(){    \n    var svg = \"<svg>\"\n    for (i=0; i < $('input#bars2-number').val(); i++) {\n        svg += \"<rect height='50' width='10' x='\" + i * 20 + \"' style='fill:\" + $('input#bars2-color').val() + \"'/>\"\n    }\n    svg += \"</svg>\"\n    $('.myviz').html(svg)\n})\n\n$('button#bars3').click(function(){    \n    var svg = \"<svg>\"\n    for (i=0; i < $('input#bars3-number').val(); i++) {\n        svg += \"<rect height='\" + $('input#bars3-height').val()\n        svg += \"' width='10' x='\" + i * 20\n        svg += \"' style='fill:\" + $('input#bars3-color').val() + \"'/>\"\n    }\n    svg += \"</svg>\"\n    $('.myviz').html(svg)\n})"</script></p>
+                        <h1 id="yelp">Yelp</h1>
+<p>The objective of this hackathon is to design and prototype an interactive
+visualization interface for exploring the Yelp dataset. Here we assume a user
+in the <em>data exploration</em> mode and may not have specific questions in mind.
+Instead of answering specific questions, your interface should support
+ <em>a class of questions</em>.</p>
+<p>Some examples of <em>question classes</em> for the Yelp dataset are:</p>
+<ul>
+<li>How many businesses are in (CITY)?</li>
+<li>How many businesses in the (X) categories?</li>
+<li>What is the distribution of businesses across categories that have
+an attribute (Y)?</li>
+</ul>
+<p>As you can see, each question class has a particular template with &quot;blanks&quot; to
+fill in. Your interface should provide appropriate input fields (e.g., text,
+dropdown) for users to fill in those blanks and get a different result.</p>
+<h2 id="business">business</h2>
+<p><pre><code>
+{
+    &apos;type&apos;: &apos;business&apos;,
+    &apos;business_id&apos;: (encrypted business id),
+    &apos;name&apos;: (business name),
+    &apos;neighborhoods&apos;: [(hood names)],
+    &apos;full_address&apos;: (localized address),
+    &apos;city&apos;: (city),
+    &apos;state&apos;: (state),
+    &apos;latitude&apos;: latitude,
+    &apos;longitude&apos;: longitude,
+    &apos;stars&apos;: (star rating, rounded to half-stars),
+    &apos;review_count&apos;: review count,
+    &apos;categories&apos;: [(localized category names)]
+    &apos;open&apos;: True / False (corresponds to closed, not business hours),
+    &apos;hours&apos;: {
+        (day_of_week): {
+            &apos;open&apos;: (HH:MM),
+            &apos;close&apos;: (HH:MM)
+        },
+        ...
+    },
+    &apos;attributes&apos;: {
+        (attribute_name): (attribute_value),
+        ...
+    },
+}
+</code></pre></p>
 
                     
                     </section>
@@ -524,10 +495,10 @@ $(&apos;button#bars3&apos;).click(function(){
         </div>
 
         
-        <a href="../../learning/week7/jquery-click.html" class="navigation navigation-prev " aria-label="Previous page: Click"><i class="fa fa-angle-left"></i></a>
+        <a href="../../hackathons/netapp/index.html" class="navigation navigation-prev " aria-label="Previous page: NetApp"><i class="fa fa-angle-left"></i></a>
         
         
-        <a href="../../learning/week7/jquery-load.html" class="navigation navigation-next " aria-label="Next page: Load"><i class="fa fa-angle-right"></i></a>
+        <a href="../../hackathons/yelp/warmup.html" class="navigation navigation-next " aria-label="Next page: Warmup"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>
